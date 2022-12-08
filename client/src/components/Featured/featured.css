@@ -1,0 +1,25 @@
+.featured{
+    width: 100%;
+    max-width: 1024px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    z-index: 1;
+
+}
+
+.featuredItem{
+    margin: 10px;
+    height: 250px;
+}
+
+.featuredTitle {
+    font-size: 10px;
+}
+
+.featuredImg{
+    border-radius: 5px;
+    width: 100%;
+    object-fit: cover;
+}
+
