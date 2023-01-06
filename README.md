@@ -29,6 +29,7 @@ A live demonstration is available [here](https://kamibooking.onrender.com)
 - [ ] Improve filter system
 - [ ] Add loading icons
 - [ ] Add payment integration using Stripe API so users can pay for their rooms
+- [ ] Add other integrations such as flights, car rentals and taxis
 
 <br>
 
