@@ -43,5 +43,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }, "proxy" : "https://kamibooking-server.onender.com/api"
+  }, "proxy" : "https://kamibooking-server.onrender.com/api"
 }
