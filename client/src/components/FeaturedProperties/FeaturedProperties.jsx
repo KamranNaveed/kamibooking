@@ -1,49 +1,28 @@
 import React from 'react'
+import useFetch from '../../hooks/useFetch'
 import "./FeaturedProperties.css"
 
 const FeaturedProperties = () => {
+    const {data, loading, error, reFetch} = useFetch("/hotels?featured=true&limit=4")
   return (
     <div className="fp">
-        <div className="fpItem">
-            <img src="https://t-cf.bstatic.com/xdata/images/hotel/square600/123801934.webp?k=27073a18101dd5a4eefc76251f7d476be72e19ed03e98819f2d94667dd60f31a&o=&s=1" alt="" className="fpImg" />
-            <span className="fpName">6 Continents Apartments by Prague Residences</span>
-            <span className="fpCity">Prague 1, Czech Republic, Prague</span>
-            <span className="fpPrice">Starting from $103</span>
-            <div className="fpRating">
-                <button className="fpRatingBtn">8.5</button>
-                <span className="fpRatingText">Excellent</span>
+        {loading ? "Loading" : 
+        <>
+        {
+            data.map((item,i)=>(
+            <div className="fpItem" key = {i}>
+                <img src={item.photos[0]} alt="" className="fpImg" width="300px" height="150px" />
+                <span className="fpName">{item.name}</span>
+                <span className="fpCity">{item.city}</span>
+                <span className="fpPrice">{item.cheapestRoom}</span>
+                {item.rating && <div className="fpRating">
+                    <button className="fpRatingBtn">{item.rating}</button>
+                    <span className="fpRatingText">{item.rating > 5 ? "Excellent": "Fair"}</span>
+                </div>}
             </div>
-        </div>
-        <div className="fpItem">
-            <img src="https://t-cf.bstatic.com/xdata/images/hotel/square600/123801934.webp?k=27073a18101dd5a4eefc76251f7d476be72e19ed03e98819f2d94667dd60f31a&o=&s=1" alt="" className="fpImg" />
-            <span className="fpName">6 Continents Apartments by Prague Residences</span>
-            <span className="fpCity">Prague 1, Czech Republic, Prague</span>
-            <span className="fpPrice">Starting from $103</span>
-            <div className="fpRating">
-                <button className="fpRatingBtn">8.5</button>
-                <span className="fpRatingText">Excellent</span>
-            </div>
-        </div>
-        <div className="fpItem">
-            <img src="https://t-cf.bstatic.com/xdata/images/hotel/square600/123801934.webp?k=27073a18101dd5a4eefc76251f7d476be72e19ed03e98819f2d94667dd60f31a&o=&s=1" alt="" className="fpImg" />
-            <span className="fpName">6 Continents Apartments by Prague Residences</span>
-            <span className="fpCity">Prague 1, Czech Republic, Prague</span>
-            <span className="fpPrice">Starting from $103</span>
-            <div className="fpRating">
-                <button className="fpRatingBtn">8.5</button>
-                <span className="fpRatingText">Excellent</span>
-            </div>
-        </div>
-        <div className="fpItem">
-            <img src="https://t-cf.bstatic.com/xdata/images/hotel/square600/123801934.webp?k=27073a18101dd5a4eefc76251f7d476be72e19ed03e98819f2d94667dd60f31a&o=&s=1" alt="" className="fpImg" />
-            <span className="fpName">6 Continents Apartments by Prague Residences</span>
-            <span className="fpCity">Prague 1, Czech Republic, Prague</span>
-            <span className="fpPrice">Starting from $103</span>
-            <div className="fpRating">
-                <button className="fpRatingBtn">8.5</button>
-                <span className="fpRatingText">Excellent</span>
-            </div>
-        </div>
+            ))
+        }
+        </>}
     </div>
   )
 }

@@ -3,6 +3,11 @@
     --secondary-color: #0071c2;
   }
 
+  *
+  {
+    margin: 0;
+    box-sizing: border-box;
+  }
 
 .homeContainer{
     margin-top: 50px;

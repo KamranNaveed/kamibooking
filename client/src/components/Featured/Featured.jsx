@@ -1,21 +1,25 @@
+import useFetch from "../../hooks/useFetch"
 import "./featured.css"
 
 const Featured = () => {
+
+    const {data, loading, error, reFetch} = useFetch("/hotels/countByCity?cities=london,new%20york")
+
   return (
     <div>
       <div className="featured">
-        <div className="featuredItem">
+        {loading ? ("Loading Please wait") : (<><div className="featuredItem">
             <img src="https://t-cf.bstatic.com/xdata/images/city/square250/349720.webp?k=b7eca2cb90afd858f294732b0d5c194af47e70386b5be99373e3ff03be95c515&o=" alt="Las Vegas" className="featuredImg" />
             <div className="featuredTitle">
-                <h1>Las Vegas</h1>
-                <h2>5462 properties</h2>
+                <h1>London</h1>
+                <h2>{data[0]} properties</h2>
             </div>
         </div>
         <div className="featuredItem">
             <img src="https://t-cf.bstatic.com/xdata/images/city/square250/856691.webp?k=9cf21942b6aa8706b8721525de6a06b55e8980139ee21f53593982a8e988a55a&o=" alt="New York City" className="featuredImg" />
             <div className="featuredTitle">
                 <h1>New York City</h1>
-                <h2>5462 properties</h2>
+                <h2>{data[1]} properties</h2>
             </div>
         </div>
         <div className="featuredItem">
@@ -38,7 +42,7 @@ const Featured = () => {
                 <h1>Gatlinburg</h1>
                 <h2>5462 properties</h2>
             </div>
-        </div>
+        </div></>)}
       </div>
     </div>
   )

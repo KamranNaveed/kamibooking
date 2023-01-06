@@ -6,32 +6,29 @@ import MailList from "../../components/MailList/MailList";
 import Footer from "../../components/Footer/Footer";
 import "./Hotel.css"
 import { useState } from "react";
+import useFetch from "../../hooks/useFetch";
+import { useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { SearchContext } from "../../context/SearchContext";
 
 const Hotel = () => {
 
+    const location = useLocation()
+    const id = location.pathname.split("/")[2]
     const [slideIndex, setSlideIndex] = useState(0)
     const [openSlider, setOpenSlider] = useState(false)
+    const {data, loading, error, reFetch} = useFetch(`/hotels/find/${id}`)
 
-    const photos = [
-        {
-            src : "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/330800463.jpg?k=85d26772ca04588f7be34b5cd5cabf05bf1c109ff564b995da15ae71f24a8d21&o=&hp=1"
-        }, 
-        {
-            src : "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/295710118.jpg?k=f77ae4a6bc9e5581a217a6278ab16e0840602dac2a0234e4aa16d6e92f13f078&o=&hp=1"
-        }, 
-        {
-            src : "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/269548869.jpg?k=de68f580fa5b19dc94ec78372e026087ba14cf13a014a3d62ae30ff7d2e02486&o=&hp=1"
-        }, 
-        {
-            src : "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/193379383.jpg?k=b60a8e4d0f2c0e11042eb4a65794d541665401d4775ec494128a706bf785013b&o=&hp=1"
-        }, 
-        {
-            src : "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/193380001.jpg?k=d96ab2b5815805150699a3d85b4a6925fbfe6de7eb4f3a9feda9c03371dfea8f&o=&hp=1"
-        }, 
-        {
-            src : "https://t-cf.bstatic.com/xdata/images/hotel/max1024x768/193380020.jpg?k=b469c878392420256402c3d5b485c9176a2a0bd2f11cd656c0c2da858feb6dcc&o=&hp=1"
-        } 
-    ]
+    const {dates, options} = useContext(SearchContext)
+
+    const MILLISECONDS_PER_DAY = 1000*60*60*24
+    const dayDifference = (date1, date2) => {
+        const timeDiff = Math.abs(date2?.getTime()-date1?.getTime())
+        const diffDays = Math.ceil(timeDiff/MILLISECONDS_PER_DAY)
+        return diffDays
+    }
+   
+    const days = dayDifference(dates[0].endDate, dates[0].startDate)
 
     const handleOpen = (i) => {
         setSlideIndex(i);
@@ -53,43 +50,41 @@ const Hotel = () => {
         <div>
             <Navbar/>
             <Header type = "list"/>
-            <div className="hotelContainer">
+            {loading ? "loading ": <div className="hotelContainer">
                 {openSlider && <div className="slider">
                     <FontAwesomeIcon icon={faCircleXmark} className="close" onClick={()=>setOpenSlider(false)}/>
                     <FontAwesomeIcon icon={faCircleArrowLeft} className="arrow" onClick={()=>handleMove("l")}/>
                     <div className="sliderWrapper">
-                        <img src={photos[slideIndex].src} alt="" className="sliderImg" />
+                        <img src={data.photos[slideIndex]} alt="" className="sliderImg" />
                     </div>
                     <FontAwesomeIcon icon={faCircleArrowRight} className="arrow" onClick={()=>handleMove("r")}/>
                 </div>}
                 <div className="hotelWrapper">
                     <button className="bookNow">Reserve or Book Now!</button>
-                    <h1 className="hotelTitle">Grand Hotel</h1>
+                    <h1 className="hotelTitle">{data.name}</h1>
                     <div className="hotelAddress">
                         <FontAwesomeIcon icon={faLocationDot}/>
-                        <span>Elton 125 STreet</span>
+                        <span>{data.address}</span>
                     </div>
-                    <span className="hotelDistance">Excellent location 500 m from centre</span>
-                    <span className="hotelPriceHighlight">Book a stay over $114 at this property and get a free airport taxi</span>
+                    <span className="hotelDistance">Excellent location ${data.distance} m from centre</span>
+                    <span className="hotelPriceHighlight">Book a stay over ${data.cheapestRoom} at this property and get a free airport taxi</span>
                     <div className="hotelImages">
-                        {photos.map((photo, i) => {
+                        {data.photos?.map((photo, i) => {
                             return <div className="hotelImgWrapper">
-                                <img onClick={()=>handleOpen(i)} src={photo.src} alt="" className="hotelImg" />
+                                <img onClick={()=>handleOpen(i)} src={photo} alt="" className="hotelImg" />
                             </div>
                         })}
                     </div>
                     <div className="hotelDetails">
                         <div className="hotelDetailsText">
-                            <h1 className="hotelTitle">Stay in the heart of Las Vegas </h1>
-                            <p className="hotelDesc">Located next to the 20,000 seat T-Mobile Arena, Park MGM Las Vegas is located on the Las Vegas Strip and features a casino and its own theater, Dolby Live at Park MGM, a 5,200 seat arena that hosts top musical artists from around the world. This contemporary resort offers 3 pools complete with poolside cabanas. Guest rooms include an LED TV with premium cable service.
-
-Each spacious room at Park MGM Las Vegas includes an in-room safe, blackout shades, an over-sized vanity and bedside outlets for phones and computers. Private bathrooms include a hairdryer.</p>
+                            <h1 className="hotelTitle">Stay in the heart of {data.city} </h1>
+                            <p className="hotelDesc">{data.description}</p>
                         </div>
                         <div className="hotelDetailsPrice">
-                            <h1>Perfect for a 9-night stay</h1>
-                            <span>Located in the real heart of Las Vegas</span>
+                            <h1>Perfect for a {days}-night stay</h1>
+                            <span>Located in the real heart of {data.city}</span>
                             <h2>
-                                <b>$945</b> (9 nights)
+                                <b>${days*data.cheapestRoom*options.room}</b> ({days} nights)
                             </h2>
                             <button>Reserve or Book Now!</button>
                         </div>
@@ -97,7 +92,7 @@ Each spacious room at Park MGM Las Vegas includes an in-room safe, blackout shad
                 </div>
                 <MailList/>
                 <Footer/>
-            </div>
+            </div>}
         </div>
     )
 }
