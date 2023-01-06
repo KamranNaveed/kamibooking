@@ -18,7 +18,7 @@ This app was built using the MERN stack (MongoDB, Express, React, and Node.js) a
 
 <br>
 
-A live demonstration is available [here](https://kamibooking.onrender.com)
+A live demonstration is available [here](https://kamibooking.onrender.com). For now, this site is best viewed on a desktop.
 
 <br> 
 
